@@ -1,5 +1,4 @@
 .env
-nextek_index/
 Docs/
 __pycache__/
 *.pyc
