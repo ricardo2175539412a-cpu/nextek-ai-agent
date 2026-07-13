@@ -187,7 +187,7 @@ La aplicación está desplegada y accesible en:
 
 ### Captura de la aplicación en producción
 
-*(agregar captura aquí después del deploy)*
+![NexTek AI Agent en producción](assets/demo.png)
 
 ### Cómo se hizo el deploy
 
