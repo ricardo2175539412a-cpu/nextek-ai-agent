@@ -1,0 +1,10 @@
+.env
+nextek_index/
+Docs/
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
