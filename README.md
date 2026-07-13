@@ -2,8 +2,9 @@
 
 Agente conversacional de inteligencia artificial que permite consultar documentos internos de una empresa usando lenguaje natural, sin necesidad de abrir ningún archivo.
 
-Desarrollado como proyecto final del challenge de implementación de IA — simulando el caso real de una fintech o e-commerce que necesita que sus colaboradores puedan hacer preguntas sobre políticas y procedimientos internos sin perder tiempo buscando en documentos.
+Desarrollado como proyecto final del challenge de implementación de IA — simulando el caso real de un e-commerce que necesita que sus colaboradores puedan hacer preguntas sobre políticas y procedimientos internos sin perder tiempo buscando en documentos.
 
+---
 
 ## El problema que resuelve
 
@@ -11,6 +12,7 @@ Las empresas acumulan decenas de documentos internos: políticas, manuales, guí
 
 Este agente resuelve eso: le haces una pregunta en español y te responde directamente, citando de qué documento y página viene la información.
 
+---
 
 ## Arquitectura
 
@@ -47,9 +49,9 @@ FastAPI — expone todo como API REST
 chat.html — interfaz de chat visual para el usuario
 ```
 
-### Por que estas tecnologías
+### Por qué estas tecnologías
 
-- **LangChain** — orquesta todo el flujo RAG con pocas líneas de código 
+- **LangChain** — orquesta todo el flujo RAG con pocas líneas de código
 - **Google Gemini** — accesible con plan gratuito, modelos actualizados y buenos resultados en español
 - **FAISS** — librería de Facebook para búsqueda vectorial, rápida y que funciona sin servidor externo
 - **FastAPI** — framework moderno para APIs en Python, con documentación automática incluida
@@ -61,13 +63,13 @@ chat.html — interfaz de chat visual para el usuario
 
 La base de conocimiento del agente está formada por 5 documentos de **NexTek**, una tienda de electrónica ficticia creada para este proyecto:
 
-|            Documento                 |                       Contenido                        |
-|______________________________________|________________________________________________________|
-| Política de Privacidad               | Datos personales, derechos ARCO, cookies, seguridad    |
+| Documento | Contenido |
+|---|---|
+| Política de Privacidad | Datos personales, derechos ARCO, cookies, seguridad |
 | Política de Reembolso y Devoluciones | Plazos por categoría, proceso de devolución, garantías |
-| Preguntas Frecuentes (FAQ)           | Compras, pagos, envíos, programa de puntos             |
-| Guía de Envíos y Entregas            | Tarifas, tiempos, paqueterías, rastreo                 |
-| Términos y Condiciones               | Marco legal, derechos del consumidor, jurisdicción     |
+| Preguntas Frecuentes (FAQ) | Compras, pagos, envíos, programa de puntos |
+| Guía de Envíos y Entregas | Tarifas, tiempos, paqueterías, rastreo |
+| Términos y Condiciones | Marco legal, derechos del consumidor, jurisdicción |
 
 ---
 
@@ -106,43 +108,46 @@ La base de conocimiento del agente está formada por 5 documentos de **NexTek**,
 ---
 
 ## Stack tecnológico
-    
-| Componente         | Tecnología                  | Versión|
-|____________________|_____________________________|________|
-| Lenguaje           | Python                      | 3.11   |
-| Framework web      | FastAPI                     | Latest |
-| Orquestación IA    | LangChain                   | Latest |
-| Modelo de chat     | Google Gemini 2.5 Flash     | Latest |
-| Embeddings         | Google Gemini Embedding 001 | Latest |
-| Base vectorial     | FAISS                       | Latest |
-| Lectura de PDFs    | PyPDF                       | Latest |
-| Deploy             | Render                      | —      |
+
+| Componente | Tecnología | Versión |
+|---|---|---|
+| Lenguaje | Python | 3.11 |
+| Framework web | FastAPI | 0.139.0 |
+| Orquestación IA | LangChain | 1.3.13 |
+| Modelo de chat | Google Gemini 2.5 Flash | — |
+| Embeddings | Google Gemini Embedding 001 | — |
+| Base vectorial | FAISS | 1.14.3 |
+| Lectura de PDFs | PyPDF | 6.14.2 |
+| Deploy | Render | — |
 
 ---
 
-## Instalación y ejecución local
+## Instalación y ejecución
 
 ### Requisitos previos
 
 - Python 3.11
-- API Key de Google Gemini (gratuita en https://aistudio.google.com/app/apikey)
+- API Key de Google Gemini
 - Git
 
 ### Pasos
 
 **1. Clona el repositorio**
 ```bash
-git clone https://github.com/TU_USUARIO/nextek-ai-agent.git
+git clone https://github.com/ricardo2175539412a-cpu/nextek-ai-agent.git
 cd nextek-ai-agent
 ```
 
 **2. Crea y activa el entorno virtual**
+
+En Windows:
 ```bash
-# Windows
 py -3.11 -m venv venv
 venv\Scripts\activate
+```
 
-# Mac / Linux
+En Mac / Linux:
+```bash
 python3.11 -m venv venv
 source venv/bin/activate
 ```
@@ -153,12 +158,18 @@ pip install -r requirements.txt
 ```
 
 **4. Configura las variables de entorno**
-```bash
-cp .env.example .env
-# Abre .env y reemplaza TU_API_KEY_AQUI con tu key real de Gemini
+
+Copia el archivo de ejemplo y completa tu API Key de Gemini:
+
+```
+GOOGLE_API_KEY=          ← aquí va tu API Key de Google Gemini
+DOCS_DIR=./Docs
+INDEX_DIR=./nextek_index
 ```
 
-**5. Agrega los documentos PDF**
+Puedes obtener una API Key gratuita en Google AI Studio.
+
+**5. Coloca los documentos PDF**
 
 Crea una carpeta `Docs/` en la raíz del proyecto y coloca ahí los 5 archivos PDF de NexTek.
 
@@ -169,13 +180,11 @@ python -m uvicorn app:app --reload
 
 **7. Abre la interfaz de chat**
 
-Abre tu navegador y ve a: http://127.0.0.1:8000/chat
-
-O abre directamente el archivo `chat.html`.
+Ve a: `http://127.0.0.1:8000/chat`
 
 ### Nota sobre el índice FAISS
 
-La primera vez que ejecutes el servidor, construirá automáticamente el índice FAISS procesando los PDFs. Este proceso tarda 2-3 minutos. Las siguientes veces cargará el índice desde disco en segundos.
+La primera vez que ejecutes el servidor construirá automáticamente el índice FAISS procesando los PDFs. Este proceso tarda 2-3 minutos dependiendo del límite de la API. Las siguientes veces cargará el índice desde disco en segundos.
 
 ---
 
@@ -183,7 +192,7 @@ La primera vez que ejecutes el servidor, construirá automáticamente el índice
 
 La aplicación está desplegada y accesible en:
 
-**https://nextek-ai-agent.onrender.com**
+**https://nextek-ai-agent.onrender.com/chat**
 
 ### Captura de la aplicación en producción
 
@@ -192,9 +201,9 @@ La aplicación está desplegada y accesible en:
 ### Cómo se hizo el deploy
 
 1. Se conectó el repositorio de GitHub a Render
-2. Se configuró la variable de entorno `GOOGLE_API_KEY` en el panel de Render
+2. Se configuraron las variables de entorno `GOOGLE_API_KEY`, `DOCS_DIR` e `INDEX_DIR` en el panel de Render
 3. Render detectó el `Dockerfile` y construyó la imagen automáticamente
-4. El agente quedó accesible públicamente en la URL de Render
+4. El agente quedó accesible públicamente en `/chat` con la interfaz visual completa
 
 ---
 
@@ -210,6 +219,8 @@ nextek-ai-agent/
 ├── .gitignore             # Archivos excluidos del repositorio
 ├── README.md              # Este archivo
 ├── nextek_agente.ipynb    # Notebook de prototipado en Google Colab
+├── assets/
+│   └── demo.png           # Captura del deploy en producción
 └── Docs/                  # Documentos PDF (no incluidos en el repo)
     ├── 01_NexTek_Politica_Privacidad.pdf
     ├── 02_NexTek_Politica_Reembolso_Devoluciones.pdf
@@ -226,9 +237,11 @@ Durante el desarrollo surgieron varios desafíos interesantes:
 
 **Rate limits de la API gratuita de Gemini** — Al generar embeddings para los 71 fragmentos de texto, la API devuelve error 429 si se hacen demasiadas llamadas seguidas. La solución fue procesar los fragmentos en lotes de 50 con una pausa de 15 segundos entre cada lote.
 
-**Compatibilidad de versiones de LangChain** — Entre las versiones recientes de LangChain varios módulos se movieron a paquetes separados (`langchain-text-splitters`, `langchain-core`). Fue necesario actualizar los imports y las dependencias.
+**Compatibilidad de versiones de LangChain** — Entre las versiones recientes de LangChain varios módulos se movieron a paquetes separados como `langchain-text-splitters` y `langchain-core`. Fue necesario actualizar los imports y las dependencias durante el desarrollo.
 
-**Modelos de embedding deprecados** — El modelo `embedding-001` fue reemplazado por `gemini-embedding-001`. Aprendimos a consultar la lista de modelos disponibles dinámicamente antes de elegir uno.
+**Modelos de embedding deprecados** — El modelo `embedding-001` fue reemplazado por `gemini-embedding-001`. Se aprendió a consultar la lista de modelos disponibles de forma dinámica antes de elegir uno.
+
+**Índice FAISS en el deploy** — Al hacer deploy en Render, el servidor no podía construir el índice desde cero por los límites de la API en entornos de producción. La solución fue incluir el índice precompilado directamente en el repositorio.
 
 ---
 
