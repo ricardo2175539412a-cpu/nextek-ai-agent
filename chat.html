@@ -113,7 +113,7 @@ async function sendMessage() {
     appendMsg('bot', data.respuesta, data.fuentes);
   } catch (e) {
     removeTyping();
-    appendMsg('bot', 'No pude conectarme al agente. Asegurate de que el servidor este corriendo en http://127.0.0.1:8000');
+    appendMsg('bot', 'Conectando con el agente, por favor repita su consulta.');
   }
 }
 </script>
