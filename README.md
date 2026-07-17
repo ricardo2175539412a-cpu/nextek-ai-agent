@@ -99,14 +99,6 @@ La base de conocimiento del agente está formada por 5 documentos de **NexTek**,
 
 ---
 
-**Pregunta:** ¿Cómo puedo ejercer mis derechos ARCO?
-
-**Respuesta:** Puedes ejercer tus derechos de Acceso, Rectificación, Cancelación u Oposición enviando una solicitud a privacidad@nextek.com.mx con tu nombre completo, correo registrado y una copia de tu identificación oficial. NexTek responde en un plazo máximo de 20 días hábiles.
-
-*Fuente: Política de Privacidad - pág. 4*
-
----
-
 ## Stack tecnológico
 
 | Componente | Tecnología | Versión |
