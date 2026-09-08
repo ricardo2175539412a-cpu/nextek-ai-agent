@@ -42,8 +42,6 @@ vectorstore = None
 
 
 # --- Prompt del agente ---
-# Le decimos a Gemini exactamente como debe comportarse
-# Mantenerlo claro y con reglas especificas mejora mucho la calidad de las respuestas
 PROMPT_TEMPLATE = """Eres el asistente virtual oficial de NexTek, una tienda de
 comercio electronico especializada en electronica y tecnologia en Mexico.
 
