@@ -1,0 +1,390 @@
+/* assets/nextek-widget.css */
+:root {
+  --nx-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --nx-radius: 16px;
+  --nx-shadow: 0 12px 36px rgba(0, 0, 0, 0.16), 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================
+   ESTRUCTURA BASE Y ANIMACIONES
+   ============================================================ */
+.nx-chat-root {
+  box-sizing: border-box;
+  font-family: var(--nx-font);
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  overflow: hidden;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nx-chat-root * { 
+  box-sizing: border-box; 
+}
+
+@keyframes nxPopIn {
+  from { opacity: 0; transform: scale(0.92) translateY(12px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes nxSlideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes nxBubbleIn {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes nxDotPulse {
+  0%, 100% { transform: scale(0.7); opacity: 0.4; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+/* ============================================================
+   MODOS DE VISUALIZACIÓN
+   ============================================================ */
+
+/* 1. Modo Fullscreen / Portal Embebido */
+.nx-chat-root.mode-fullscreen {
+  width: 100% !important;
+  height: 100% !important;
+  border-radius: 12px;
+  display: flex !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* 2. Modo FAB (Tienda - Flotante y Arrastrable) */
+.nx-chat-root.mode-fab {
+  position: fixed;
+  bottom: 92px;
+  right: 28px;
+  width: 380px;
+  height: 560px;
+  border-radius: var(--nx-radius);
+  box-shadow: var(--nx-shadow);
+  z-index: 999999;
+  display: none;
+  animation: nxPopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* 3. Modo Messenger (Dock Anclado al Borde Inferior) */
+.nx-chat-root.mode-messenger {
+  position: fixed;
+  bottom: 0;
+  right: 32px;
+  width: 340px;
+  height: 470px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.14);
+  border-bottom: none;
+  z-index: 999999;
+  display: none;
+  transition: height 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: nxSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.nx-chat-root.mode-messenger.minimized {
+  height: 46px !important;
+}
+
+/* ============================================================
+   CABECERA Y CONTROL DE ARRASTRE
+   ============================================================ */
+.nx-header {
+  padding: 13px 16px;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  user-select: none;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.nx-chat-root.mode-fab .nx-header {
+  cursor: grab;
+}
+.nx-chat-root.mode-fab .nx-header:active {
+  cursor: grabbing;
+}
+.nx-chat-root.mode-messenger .nx-header {
+  cursor: pointer;
+}
+
+.nx-header-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  pointer-events: none;
+}
+.nx-avatar {
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+.nx-title { 
+  font-size: 14.5px; 
+  font-weight: 600; 
+  margin: 0; 
+}
+.nx-status { 
+  font-size: 11px; 
+  opacity: 0.85; 
+  display: flex; 
+  align-items: center; 
+  gap: 4px; 
+}
+.nx-status::before {
+  content: "";
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #4ade80;
+  border-radius: 50%;
+}
+
+.nx-actions { 
+  display: flex; 
+  gap: 6px; 
+}
+.nx-btn-action {
+  background: rgba(255, 255, 255, 0.12);
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 14px;
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.nx-btn-action:hover { background: rgba(255, 255, 255, 0.25); }
+.nx-btn-action:active { transform: scale(0.92); }
+
+/* ============================================================
+   CONVERSACIÓN Y BURBUJAS
+   ============================================================ */
+.nx-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  background: #f8fafc;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  scroll-behavior: smooth;
+}
+
+.nx-msg {
+  max-width: 82%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  word-break: break-word;
+  animation: nxBubbleIn 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.nx-msg.user {
+  align-self: flex-end;
+  color: #ffffff;
+  border-bottom-right-radius: 4px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.nx-msg.bot {
+  align-self: flex-start;
+  background: #ffffff;
+  color: #0f172a;
+  border-bottom-left-radius: 4px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+.nx-msg.bot.error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+/* Indicador de escritura animado */
+.nx-typing {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  width: fit-content;
+}
+.nx-typing span {
+  width: 6px;
+  height: 6px;
+  background: #64748b;
+  border-radius: 50%;
+  animation: nxDotPulse 1.2s infinite ease-in-out;
+}
+.nx-typing span:nth-child(2) { animation-delay: 0.2s; }
+.nx-typing span:nth-child(3) { animation-delay: 0.4s; }
+
+/* Fuentes citadas */
+.nx-sources {
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.nx-source-tag {
+  font-size: 10px;
+  background: #f1f5f9;
+  color: #475569;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-weight: 500;
+  border: 1px solid #e2e8f0;
+}
+
+/* ============================================================
+   SECCIÓN DEDICADA DE PREGUNTAS SUGERIDAS (DOCK INFERIOR)
+   ============================================================ */
+.nx-suggestions-bar {
+  padding: 8px 14px 10px 14px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  align-items: center;
+  flex-shrink: 0;
+  animation: nxBubbleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.nx-chip {
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  border-radius: 20px;
+  padding: 6px 13px;
+  font-size: 12px;
+  line-height: 1.3;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.nx-chip:hover {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.18);
+}
+
+.nx-chip:active {
+  transform: scale(0.97);
+}
+
+/* ============================================================
+   CAJA DE ENTRADA (FOOTER)
+   ============================================================ */
+.nx-footer {
+  padding: 12px 14px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.nx-input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #cbd5e1;
+  border-radius: 24px;
+  font-size: 13.5px;
+  outline: none;
+  background: #f8fafc;
+  color: #0f172a;
+  transition: border-color 0.2s, background 0.2s;
+}
+.nx-input:focus {
+  background: #ffffff;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+.nx-btn-send {
+  border: none;
+  color: #ffffff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+.nx-btn-send:hover { 
+  opacity: 0.92; 
+  transform: scale(1.05); 
+}
+.nx-btn-send:active { 
+  transform: scale(0.95); 
+}
+
+/* ============================================================
+   BOTÓN DISPARADOR CIRCULAR (LAUNCHER)
+   ============================================================ */
+.nx-launcher-btn {
+  position: fixed;
+  bottom: 26px;
+  right: 28px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  color: #ffffff;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999998;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s;
+}
+.nx-launcher-btn:hover {
+  transform: scale(1.08) translateY(-2px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+.nx-launcher-btn:active { 
+  transform: scale(0.94); 
+}
+
+/* ============================================================
+   RESPONSIVIDAD MÓVIL
+   ============================================================ */
+@media (max-width: 600px) {
+  .nx-chat-root.mode-messenger,
+  .nx-chat-root.mode-fab {
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+}

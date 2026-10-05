@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>NexTek AI - Selector de Componentes</title>
+  <link rel="stylesheet" href="/assets/nextek-widget.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: #0f172a; display: flex; flex-direction: column; height: 100dvh; overflow: hidden; }
+
+    #demo-nav {
+      background: #1e293b;
+      border-bottom: 1px solid #334155;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+      flex-shrink: 0;
+      z-index: 1000;
+      gap: 12px;
+    }
+    .brand { color: #38bdf8; font-weight: 700; font-size: 14px; white-space: nowrap; }
+
+    .nav-tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding: 4px 0;
+    }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      padding: 7px 14px;
+      font-size: 12.5px;
+      font-weight: 500;
+      border-radius: 6px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .tab-btn:hover { color: #ffffff; border-color: #475569; }
+    .tab-btn.active {
+      background: #2563eb;
+      color: #ffffff;
+      border-color: #2563eb;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.35);
+    }
+
+    #stage { flex: 1; height: calc(100dvh - 56px); position: relative; overflow-y: auto; background: #f8fafc; }
+
+    /* Animación de entrada de vista */
+    .view-container {
+      animation: viewFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+      width: 100%;
+      height: 100%;
+    }
+    @keyframes viewFade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Vista Portal */
+    .view-portal { display: flex; height: 100%; width: 100%; }
+    .portal-sidebar { width: 250px; background: #111827; color: #fff; padding: 20px 16px; display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+    .portal-main { flex: 1; padding: 16px; display: flex; flex-direction: column; height: 100%; min-height: 0; }
+    #chat-target-box { flex: 1; height: 100%; width: 100%; }
+
+    /* Vista Tienda */
+    .view-store { padding: 32px 20px; max-width: 960px; margin: 0 auto; width: 100%; }
+    .store-hero { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 22px; margin-bottom: 20px; }
+    .catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .store-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 20px; text-align: center; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+    .price { font-size: 19px; font-weight: 700; color: #2563eb; margin: 8px 0; }
+
+    /* Vista Messenger */
+    .view-feed { max-width: 620px; margin: 30px auto; padding: 0 16px; display: flex; flex-direction: column; gap: 16px; }
+    .feed-card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 22px; box-shadow: 0 1px 3px rgba(0,0,0,0.03); }
+
+    @media (max-width: 768px) {
+      .view-portal { flex-direction: column; }
+      .portal-sidebar { width: 100%; padding: 12px 16px; flex-direction: row; justify-content: space-between; align-items: center; }
+      .portal-sidebar hr, .portal-sidebar p { display: none; }
+      .portal-main { padding: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header id="demo-nav">
+    <div class="brand">⚡ NexTek AI</div>
+    <div class="nav-tabs">
+      <button class="tab-btn active" id="btn-tienda" onclick="cambiarVista('tienda')">🏬 Tienda (FAB Arrastrable)</button>
+      <button class="tab-btn" id="btn-portal" onclick="cambiarVista('portal')">📋 Portal Soporte</button>
+      <button class="tab-btn" id="btn-messenger" onclick="cambiarVista('messenger')">💬 Messenger</button>
+    </div>
+  </header>
+
+  <main id="stage"></main>
+
+  <script src="/assets/nextek-widget.js"></script>
+  <script>
+    function cambiarVista(modo) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      const activeBtn = document.getElementById('btn-' + modo);
+      if (activeBtn) activeBtn.classList.add('active');
+
+      if (window.NexTekWidget) window.NexTekWidget.destroy();
+      const stage = document.getElementById('stage');
+
+      if (modo === 'tienda') {
+        stage.innerHTML = `
+          <div class="view-container view-store">
+            <div class="store-hero">
+              <h2>NexTek Store Demo</h2>
+              <p style="color:#64748b; font-size:13.5px; margin-top:4px;">
+                Abre el chat con el botón inferior. <strong>Puedes arrastrar la ventana manteniendo presionado el clic sobre la cabecera azul</strong>.
+              </p>
+            </div>
+            <div class="catalog">
+              <div class="store-card">
+                <h3>Laptop Ultra Pro 14"</h3>
+                <p class="price">$18,499 MXN</p>
+                <p style="font-size:12.5px; color:#64748b;">Envío gratuito y garantía directa.</p>
+              </div>
+              <div class="store-card">
+                <h3>Smartphone Apex 5G</h3>
+                <p class="price">$9,299 MXN</p>
+                <p style="font-size:12.5px; color:#64748b;">30 días de devolución asegurada.</p>
+              </div>
+            </div>
+          </div>
+        `;
+        window.NexTekWidget.init({ mode: 'fab', color: '#2563eb' });
+
+      } else if (modo === 'portal') {
+        stage.innerHTML = `
+          <div class="view-container view-portal">
+            <aside class="portal-sidebar">
+              <h3>NexTek Docs</h3>
+              <p style="font-size:12px; color:#94a3b8;">Manual y Políticas Internas</p>
+              <hr style="border:0; border-top:1px solid #374151;">
+              <span style="font-size:12px; color:#60a5fa;">● Agente Listo</span>
+            </aside>
+            <main class="portal-main">
+              <div id="chat-target-box"></div>
+            </main>
+          </div>
+        `;
+        window.NexTekWidget.init({ mode: 'fullscreen', target: 'chat-target-box', color: '#111827' });
+
+      } else if (modo === 'messenger') {
+        stage.innerHTML = `
+          <div class="view-container view-feed">
+            <div class="feed-card">
+              <h2>Atención al Cliente</h2>
+              <p style="color:#475569; font-size:13.5px; margin-top:6px;">
+                Chat anclado abajo a la derecha. Puedes minimizarlo y restaurarlo pulsando la cabecera.
+              </p>
+            </div>
+          </div>
+        `;
+        window.NexTekWidget.init({ mode: 'messenger', color: '#0084ff' });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      cambiarVista('tienda');
+    });
+  </script>
+</body>
+</html>
