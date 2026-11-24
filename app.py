@@ -48,11 +48,16 @@ embeddings = GoogleGenerativeAIEmbeddings(
     google_api_key=GOOGLE_API_KEY
 )
 
+opciones_llm = {}
+if "2.5-flash" in LLM_MODEL:
+    opciones_llm["thinking_budget"] = 0
+
 llm = ChatGoogleGenerativeAI(
     model=LLM_MODEL,
     google_api_key=GOOGLE_API_KEY,
     temperature=0.1,
-    max_output_tokens=350
+    max_output_tokens=1024,
+    **opciones_llm
 )
 
 output_parser = StrOutputParser()
