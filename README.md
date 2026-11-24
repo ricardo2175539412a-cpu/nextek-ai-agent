@@ -6,8 +6,6 @@ Agente conversacional de atención al cliente para **NexTek México**, una tiend
 
 > El servicio está en el plan gratuito de Render: si estuvo inactivo, la primera petición puede tardar cerca de un minuto en responder (cold start).
 
-![NexTek AI Agent en producción](assets/demo.png)
-
 ---
 
 ## Cómo funciona
